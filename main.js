@@ -57,3 +57,9 @@ document.body.addEventListener("wheel", function(e){
 });
 
 canvas.style.cursor = "grab";
+
+
+window.addEventListener("resize", function(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
