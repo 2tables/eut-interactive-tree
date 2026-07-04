@@ -1,3 +1,7 @@
+@font-face{
+    font-family: "SourceSansPro";
+    src: url("fonts/SourceSansPro.ttf") format("truetype");
+}
 body{
     margin: 0;
     overflow: hidden;

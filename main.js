@@ -45,9 +45,13 @@ function renderNode(node) {
     ctx.fillStyle = info.baseplates[node.baseplate].color;
     ctx.strokeRect(node.x + view.x, node.y + view.y, 10, 10);
     ctx.fillRect(node.x + view.x, node.y + view.y, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.strokeText(`#${node.id} (${node.maxlevel})`, node.x + view.x + 5, node.y + view.y + 5);
+    ctx.fillText(`#${node.id} (${node.maxlevel})`, node.x + view.x + 5, node.y + view.y + 5);
 }
 
 function render() {
+    ctx.font = "16px SourceSansPro";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(images[info.baseplates[0].image], view.x, view.y);
