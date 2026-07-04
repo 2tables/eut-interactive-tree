@@ -1,12 +1,15 @@
 async function getInfo() {
-    res = await fetch("./data/baseplates.json");
-    data = await res.json();
-    baseplates = data;
-    res = await fetch("./data/nodes.json");
-    data = await res.json();
-    nodes = data;
-    return { baseplates: baseplates["baseplates"], nodes: nodes["nodes"] };
+    const baseplatesResponse = await fetch("./data/baseplates.json");
+    const baseplatesData = await baseplatesResponse.json();
+    const nodesResponse = await fetch("./data/nodes.json");
+    const nodesData = await nodesResponse.json();
+
+    return {
+        baseplates: baseplatesData.baseplates || [],
+        nodes: nodesData.nodes || []
+    };
 }
+
 async function bridge() {
     info = await getInfo();
     for (const baseplate of info.baseplates) {
@@ -22,8 +25,9 @@ canvas.height = window.innerHeight;
 
 let view = { x: 0, y: 0, zoom: 1 };
 let isDragging = false;
+let info = { baseplates: [], nodes: [] };
+const images = {};
 
-images = {};
 function loadImage(url) {
     return new Promise((resolve, reject) => {
         if (images[url]) {
@@ -39,29 +43,42 @@ function loadImage(url) {
         img.src = url;
     });
 }
+
 function renderNode(node) {
+    const pos = node.pos || { x: node.x || 0, y: node.y || 0 };
+    const baseplate = info.baseplates.find((plate) => plate.name === node.baseplate) || info.baseplates[0];
+    const color = baseplate ? baseplate.color : "#ffffff";
+
     ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
-    ctx.fillStyle = info.baseplates[node.baseplate].color;
-    ctx.strokeRect(node.x + view.x, node.y + view.y, 10, 10);
-    ctx.fillRect(node.x + view.x, node.y + view.y, 10, 10);
+    ctx.fillStyle = color;
+    ctx.strokeRect(pos.x + view.x, pos.y + view.y, 200, 100);
+    ctx.fillRect(pos.x + view.x, pos.y + view.y, 200, 100);
     ctx.fillStyle = "white";
-    ctx.strokeText(`#${node.id} (${node.maxlevel})`, node.x + view.x + 5, node.y + view.y + 5);
-    ctx.fillText(`#${node.id} (${node.maxlevel})`, node.x + view.x + 5, node.y + view.y + 5);
+    ctx.textBaseline = "top";
+    ctx.textAlign = "left"
+    ctx.lineWidth = 3;
+    ctx.strokeText(`#${node.id} (${node.maxlevel})`, pos.x + view.x + 5, pos.y + view.y + 5);
+    ctx.fillText(`#${node.id} (${node.maxlevel})`, pos.x + view.x + 5, pos.y + view.y + 5);
+    ctx.strokeText(node.name, pos.x + view.x + 195, pos.y + view.y + 5);
+    ctx.fillText(node.name, pos.x + view.x + 195, pos.y + view.y + 5);
 }
 
 function render() {
     ctx.font = "16px SourceSansPro";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.imageSmoothingEnabled = false;
-    //ctx.drawImage(images[info.baseplates[0].image], view.x, view.y);
-    renderNode(info.nodes[0]);
+    ctx.drawImage(images[info.baseplates[0].image], view.x, view.y);
+    if (info.nodes.length > 0) {
+        renderNode(info.nodes[0]);
+    }
+
     requestAnimationFrame(render);
 }
 
 bridge();
 
-canvas.addEventListener("mousedown", function (e) {
+canvas.addEventListener("mousedown", function () {
     isDragging = true;
     canvas.style.cursor = "grabbing";
 });
@@ -89,7 +106,6 @@ document.body.addEventListener("wheel", function (e) {
 });
 
 canvas.style.cursor = "grab";
-
 
 window.addEventListener("resize", function () {
     canvas.width = window.innerWidth;
