@@ -5,10 +5,13 @@ async function getInfo(){
     res = await fetch("./data/nodes.json");
     data = await res.json();
     nodes = data;
-    return {baseplates: baseplates, nodes: nodes};
+    return {baseplates: baseplates["baseplates"], nodes: nodes["nodes"]};
 }
 async function bridge(){
     info = await getInfo();
+    for(const baseplate of info.baseplates){
+        await loadImage(baseplate.image);
+    }
     render();
 }
 
@@ -20,10 +23,32 @@ canvas.height = window.innerHeight;
 let view = {x: 0, y: 0, zoom: 1};
 let isDragging = false;
 
+images = {};
+function loadImage(url){
+    return new Promise((resolve, reject) => {
+        if (images[url]) {
+            resolve(images[url]);
+            return;
+        }
+        const img = new Image();
+        img.onload = () => {
+            images[url] = img;
+            resolve(img);
+        };
+        img.onerror = reject;
+        img.src = url;
+    });
+}
+function renderNode(node){
+    ctx.fillStyle = info.baseplates[node.baseplate].color;
+    ctx.fillRect(node.x + view.x, node.y + view.y, 10, 10);
+}
+
 function render(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(-view.x, -view.y, 100, 100);
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(images[info.baseplates[0].image], view.x, view.y);
+    renderNode(info.nodes[0]);
     requestAnimationFrame(render);
 }
 
