@@ -22,7 +22,7 @@ view = {x: 0, y: 0, zoom: 1}
 function render(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.fillStyle = "#000000"
-    ctx.fillRect(-x, -y, 100, 100);
+    ctx.fillRect(-view.x, -view.y, 100, 100);
     requestAnimationFrame(render);
 }
 bridge();
