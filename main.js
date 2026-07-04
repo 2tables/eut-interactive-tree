@@ -60,6 +60,7 @@ function renderNode(node) {
     ctx.lineWidth = 3;
     ctx.strokeText(`#${node.id} (${node.maxlevel})`, pos.x + view.x + 5, pos.y + view.y + 5);
     ctx.fillText(`#${node.id} (${node.maxlevel})`, pos.x + view.x + 5, pos.y + view.y + 5);
+    ctx.textAlign = "right"
     ctx.strokeText(node.name, pos.x + view.x + 195, pos.y + view.y + 5);
     ctx.fillText(node.name, pos.x + view.x + 195, pos.y + view.y + 5);
 }
