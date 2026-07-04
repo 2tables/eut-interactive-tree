@@ -1,0 +1,14 @@
+{
+    "nodes": [
+        {
+            "id": "1",
+            "pos": {"x": 0, "y": 0},
+            "name": "forgot the name",
+            "desc": "Start generating points at a rate of <b>1P/s</b>",
+            "baseplate": "main",
+            "maxlevel": 3,
+            "parents": [],
+            "children": []
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "baseplates": [
+        {
+            "name": "main",
+            "color": "#ffffff",
+            "image": "images/baseplates/main.png",
+            "pos": {"x": 0, "y": 0}
+        }
+    ]
+}
