@@ -39,8 +39,8 @@ window.addEventListener("mousemove", function(e){
 
     const dx = e.movementX;
     const dy = e.movementY;
-    view.x += dx;
-    view.y += dy;
+    view.x -= dx;
+    view.y -= dy;
 });
 
 function stopDragging(){
