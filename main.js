@@ -19,8 +19,6 @@ canvas.height = window.innerHeight;
 
 let view = {x: 0, y: 0, zoom: 1};
 let isDragging = false;
-let lastMouseX = 0;
-let lastMouseY = 0;
 
 function render(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -33,20 +31,16 @@ bridge();
 
 canvas.addEventListener("mousedown", function(e){
     isDragging = true;
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
     canvas.style.cursor = "grabbing";
 });
 
 window.addEventListener("mousemove", function(e){
     if (!isDragging) return;
 
-    const dx = e.clientX - lastMouseX;
-    const dy = e.clientY - lastMouseY;
+    const dx = e.movementX;
+    const dy = e.movementY;
     view.x += dx;
     view.y += dy;
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
 });
 
 function stopDragging(){
