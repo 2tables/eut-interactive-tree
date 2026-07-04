@@ -54,7 +54,7 @@ function render() {
     ctx.font = "16px SourceSansPro";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(images[info.baseplates[0].image], view.x, view.y);
+    //ctx.drawImage(images[info.baseplates[0].image], view.x, view.y);
     renderNode(info.nodes[0]);
     requestAnimationFrame(render);
 }
