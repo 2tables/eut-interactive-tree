@@ -40,7 +40,10 @@ function loadImage(url) {
     });
 }
 function renderNode(node) {
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
     ctx.fillStyle = info.baseplates[node.baseplate].color;
+    ctx.strokeRect(node.x + view.x, node.y + view.y, 10, 10);
     ctx.fillRect(node.x + view.x, node.y + view.y, 10, 10);
 }
 
