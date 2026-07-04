@@ -17,8 +17,17 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+view = {x: 0, y: 0, zoom: 1}
+
 function render(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "#000000"
+    ctx.fillRect(-x, -y, 100, 100);
     requestAnimationFrame(render);
 }
 bridge();
+
+document.body.addEventListener("wheel", function(e){
+    view.x += e.deltaX;
+    view.y += e.deltaY;
+})
