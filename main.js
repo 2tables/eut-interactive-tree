@@ -1,15 +1,15 @@
-async function getInfo(){
+async function getInfo() {
     res = await fetch("./data/baseplates.json");
     data = await res.json();
     baseplates = data;
     res = await fetch("./data/nodes.json");
     data = await res.json();
     nodes = data;
-    return {baseplates: baseplates["baseplates"], nodes: nodes["nodes"]};
+    return { baseplates: baseplates["baseplates"], nodes: nodes["nodes"] };
 }
-async function bridge(){
+async function bridge() {
     info = await getInfo();
-    for(const baseplate of info.baseplates){
+    for (const baseplate of info.baseplates) {
         await loadImage(baseplate.image);
     }
     render();
@@ -20,11 +20,11 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let view = {x: 0, y: 0, zoom: 1};
+let view = { x: 0, y: 0, zoom: 1 };
 let isDragging = false;
 
 images = {};
-function loadImage(url){
+function loadImage(url) {
     return new Promise((resolve, reject) => {
         if (images[url]) {
             resolve(images[url]);
@@ -39,13 +39,13 @@ function loadImage(url){
         img.src = url;
     });
 }
-function renderNode(node){
+function renderNode(node) {
     ctx.fillStyle = info.baseplates[node.baseplate].color;
     ctx.fillRect(node.x + view.x, node.y + view.y, 10, 10);
 }
 
-function render(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(images[info.baseplates[0].image], view.x, view.y);
     renderNode(info.nodes[0]);
@@ -54,12 +54,12 @@ function render(){
 
 bridge();
 
-canvas.addEventListener("mousedown", function(e){
+canvas.addEventListener("mousedown", function (e) {
     isDragging = true;
     canvas.style.cursor = "grabbing";
 });
 
-window.addEventListener("mousemove", function(e){
+window.addEventListener("mousemove", function (e) {
     if (!isDragging) return;
 
     const dx = e.movementX;
@@ -68,7 +68,7 @@ window.addEventListener("mousemove", function(e){
     view.y -= dy;
 });
 
-function stopDragging(){
+function stopDragging() {
     isDragging = false;
     canvas.style.cursor = "grab";
 }
@@ -76,7 +76,7 @@ function stopDragging(){
 window.addEventListener("mouseup", stopDragging);
 canvas.addEventListener("mouseleave", stopDragging);
 
-document.body.addEventListener("wheel", function(e){
+document.body.addEventListener("wheel", function (e) {
     view.x += e.deltaX;
     view.y += e.deltaY;
 });
@@ -84,7 +84,7 @@ document.body.addEventListener("wheel", function(e){
 canvas.style.cursor = "grab";
 
 
-window.addEventListener("resize", function(){
+window.addEventListener("resize", function () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 });
