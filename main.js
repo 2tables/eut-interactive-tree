@@ -25,7 +25,7 @@ function render(){
     ctx.fillRect(-view.x, -view.y, 100, 100);
     requestAnimationFrame(render);
 }
-bridge();
+render();
 
 document.body.addEventListener("wheel", function(e){
     view.x += e.deltaX;
