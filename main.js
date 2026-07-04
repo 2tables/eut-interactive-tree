@@ -17,17 +17,49 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-view = {x: 0, y: 0, zoom: 1}
+let view = {x: 0, y: 0, zoom: 1};
+let isDragging = false;
+let lastMouseX = 0;
+let lastMouseY = 0;
 
 function render(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = "#000000"
+    ctx.fillStyle = "#000000";
     ctx.fillRect(-view.x, -view.y, 100, 100);
     requestAnimationFrame(render);
 }
+
 bridge();
+
+canvas.addEventListener("mousedown", function(e){
+    isDragging = true;
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    canvas.style.cursor = "grabbing";
+});
+
+window.addEventListener("mousemove", function(e){
+    if (!isDragging) return;
+
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+    view.x += dx;
+    view.y += dy;
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+});
+
+function stopDragging(){
+    isDragging = false;
+    canvas.style.cursor = "grab";
+}
+
+window.addEventListener("mouseup", stopDragging);
+canvas.addEventListener("mouseleave", stopDragging);
 
 document.body.addEventListener("wheel", function(e){
     view.x += e.deltaX;
     view.y += e.deltaY;
-})
+});
+
+canvas.style.cursor = "grab";
