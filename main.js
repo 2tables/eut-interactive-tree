@@ -62,11 +62,6 @@ function renderNode(node) {
     ctx.lineWidth = 3;
     ctx.strokeText(`#${node.id} (${node.maxlevel})`, pos.x + view.x + 5, pos.y + view.y + 5);
     ctx.fillText(`#${node.id} (${node.maxlevel})`, pos.x + view.x + 5, pos.y + view.y + 5);
-    ctx.textBaseline = "bottom";
-    ctx.strokeText(node.effect, pos.x + view.x + 5, pos.y + view.y + 95);
-    ctx.fillText(node.effect, pos.x + view.x + 5, pos.y + view.y + 95);
-    ctx.textAlign = "right";
-    ctx.textBaseline = "top";
     ctx.strokeText(node.name, pos.x + view.x + 195, pos.y + view.y + 5);
     ctx.fillText(node.name, pos.x + view.x + 195, pos.y + view.y + 5);
     ctx.textBaseline = "bottom";
@@ -102,8 +97,8 @@ window.addEventListener("mousemove", function (e) {
 
     const dx = e.movementX;
     const dy = e.movementY;
-    view.x -= dx;
-    view.y -= dy;
+    view.x += dx;
+    view.y += dy;
 });
 
 function stopDragging() {
@@ -125,16 +120,3 @@ window.addEventListener("resize", function () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 });
-
-function darkenColor(hex, amount) {
-    hex = hex.replace("#", "");
-    let num = parseInt(hex, 16);
-    let r = (num >> 16) - amount;
-    let g = ((num >> 8) & 0x00FF) - amount;
-    let b = (num & 0x0000FF) - amount;
-
-    r = Math.max(0, Math.min(255, r));
-    g = Math.max(0, Math.min(255, g));
-    b = Math.max(0, Math.min(255, b));
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}
