@@ -7,8 +7,21 @@
             "desc": "Start generating points at a rate of <b>1P/s</b>",
             "baseplate": "main",
             "maxlevel": 3,
+            "effect": "",
             "parents": [],
+            "children": ["2"]
+        },
+        {
+            "id": "2",
+            "pos": {"x": 400, "y": 0},
+            "name": "part 2",
+            "desc": "whatever i'm just testing for now",
+            "baseplate": "main",
+            "maxlevel": 3,
+            "effect": "2P×",
+            "parents": ["1"],
             "children": []
         }
     ]
+    
 }

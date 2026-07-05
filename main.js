@@ -54,23 +54,37 @@ function renderNode(node) {
     ctx.fillStyle = color;
     ctx.strokeRect(pos.x + view.x, pos.y + view.y, 200, 100);
     ctx.fillRect(pos.x + view.x, pos.y + view.y, 200, 100);
+    ctx.fillStyle = darkenColor(color, 50);
+    ctx.fillRect(pos.x + view.x + 5, pos.y + view.y + 25, 190, 50);
     ctx.fillStyle = "white";
     ctx.textBaseline = "top";
-    ctx.textAlign = "left"
+    ctx.textAlign = "left";
     ctx.lineWidth = 3;
     ctx.strokeText(`#${node.id} (${node.maxlevel})`, pos.x + view.x + 5, pos.y + view.y + 5);
     ctx.fillText(`#${node.id} (${node.maxlevel})`, pos.x + view.x + 5, pos.y + view.y + 5);
+    ctx.textBaseline = "bottom";
+    ctx.strokeText(node.effect, pos.x + view.x + 5, pos.y + view.y + 95);
+    ctx.fillText(node.effect, pos.x + view.x + 5, pos.y + view.y + 95);
+    ctx.textAlign = "right";
+    ctx.textBaseline = "top";
     ctx.strokeText(node.name, pos.x + view.x + 195, pos.y + view.y + 5);
     ctx.fillText(node.name, pos.x + view.x + 195, pos.y + view.y + 5);
+    ctx.textBaseline = "bottom";
+    ctx.strokeText("Maxed!", pos.x + view.x + 195, pos.y + view.y + 95);
+    ctx.fillText("Maxed!", pos.x + view.x + 195, pos.y + view.y + 95);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.strokeText(node.desc, pos.x + view.x + 100, pos.y + view.y + 50);
+    ctx.fillText(node.desc, pos.x + view.x + 100, pos.y + view.y + 50);
 }
 
 function render() {
-    ctx.font = "16px SourceSansPro";
+    ctx.font = "12px SourceSansPro";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(images[info.baseplates[0].image], view.x, view.y);
-    if (info.nodes.length > 0) {
-        renderNode(info.nodes[0]);
+    for(let i = 0; i < info.nodes.length; i++){
+        renderNode(info.nodes[i]);
     }
 
     requestAnimationFrame(render);
@@ -111,3 +125,16 @@ window.addEventListener("resize", function () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 });
+
+function darkenColor(hex, amount) {
+    hex = hex.replace("#", "");
+    let num = parseInt(hex, 16);
+    let r = (num >> 16) - amount;
+    let g = ((num >> 8) & 0x00FF) - amount;
+    let b = (num & 0x0000FF) - amount;
+
+    r = Math.max(0, Math.min(255, r));
+    g = Math.max(0, Math.min(255, g));
+    b = Math.max(0, Math.min(255, b));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+}
