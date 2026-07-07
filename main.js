@@ -15,6 +15,9 @@ python3 -m http.server 8000
 IN BROWSER:
 https://localhost:8000
 */
+let mouseX = 0;
+let mouseY = 0;
+let t = 0; //t for time
 async function getInfo() {
     const baseplatesResponse = await fetch("./data/baseplates.json");
     const baseplatesData = await baseplatesResponse.json();
@@ -198,12 +201,13 @@ function renderNode(node) {
     const baseplate = info.baseplates.find((plate) => plate.name === node.baseplate) || info.baseplates[0];
     const color = baseplate ? baseplate.color : "#ffffff";
 
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = color + "80"; // Add transparency
     ctx.lineWidth = 2 * view.zoom;
     ctx.fillStyle = color;
     ctx.strokeRect(pos.x, pos.y, 200 * view.zoom, 100 * view.zoom);
     ctx.fillRect(pos.x, pos.y, 200 * view.zoom, 100 * view.zoom);
     ctx.fillStyle = darkenColor(color, 50);
+    ctx.strokeStyle = "black"
     ctx.fillRect(pos.x + (5 * view.zoom), pos.y + (25 * view.zoom), 190 * view.zoom, 50 * view.zoom);
     ctx.fillStyle = "white";
     ctx.textBaseline = "top";
@@ -255,7 +259,9 @@ function render() {
             if (child) {
                 const parentPos = calculatePosition(node);
                 const childPos = calculatePosition(child);
-                ctx.strokeStyle = "black";
+                const childBaseplate = info.baseplates.find((plate) => plate.name === child.baseplate) || info.baseplates[child.baseplate] || info.baseplates[0];
+                const childColor = (childBaseplate && childBaseplate.color) ? childBaseplate.color : "#ffffff";
+                ctx.strokeStyle = childColor + "80";
                 ctx.lineWidth = 10 * view.zoom;
                 ctx.beginPath();
                 ctx.moveTo(parentPos.x + (100 * view.zoom), parentPos.y + (50 * view.zoom));
@@ -271,7 +277,9 @@ function render() {
             if (parent) {
                 const parentPos = calculatePosition(parent);
                 const childPos = calculatePosition(node);
-                ctx.strokeStyle = "black";
+                const nodeBaseplate = info.baseplates.find((plate) => plate.name === node.baseplate) || info.baseplates[node.baseplate] || info.baseplates[0];
+                const nodeColor = (nodeBaseplate && nodeBaseplate.color) ? nodeBaseplate.color : "#ffffff";
+                ctx.strokeStyle = nodeColor + "80"; // Add transparency
                 ctx.lineWidth = 10 * view.zoom;
                 ctx.beginPath();
                 ctx.moveTo(parentPos.x + (100 * view.zoom), parentPos.y + (50 * view.zoom));
@@ -284,8 +292,16 @@ function render() {
     }
     for (let i = 0; i < info.nodes.length; i++) {
         renderNode(info.nodes[i]);
+        if (isHoveringNode(info.nodes[i], mouseX, mouseY)) {
+            canvas.style.cursor = "pointer";
+            ctx.fillStyle = `rgba(255, 255, 255, ${Math.sin(t) * 0.25 + 0.25})`;
+            ctx.lineWidth = 5 * view.zoom;
+            const pos = calculatePosition(info.nodes[i]);
+            ctx.fillRect(pos.x, pos.y, 200 * view.zoom, 100 * view.zoom);
+        }
     }
 
+    t += 0.05; // Update the time variable
     frameRequest = requestAnimationFrame(render);
 }
 
@@ -320,6 +336,8 @@ canvas.addEventListener("mousedown", function () {
 });
 
 window.addEventListener("mousemove", function (e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
     if (!isDragging) return;
 
     const dx = e.movementX;
@@ -411,11 +429,16 @@ window.addEventListener("blur", function () {
     isCtrl = false;
     currentKey = null;
 });
-
 function calculatePosition(node) {
     const pos = node.pos || { x: node.x || 0, y: node.y || 0 };
     return {
         x: pos.x * view.zoom + view.x,
         y: pos.y * view.zoom + view.y
     };
+}
+
+function isHoveringNode(node, mouseX, mouseY) {
+    const pos = calculatePosition(node);
+    return mouseX >= pos.x && mouseX <= pos.x + 200 * view.zoom &&
+        mouseY >= pos.y && mouseY <= pos.y + 100 * view.zoom;
 }
