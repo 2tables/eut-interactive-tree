@@ -248,6 +248,37 @@ function render() {
     }
 
     for (let i = 0; i < info.nodes.length; i++) {
+        const node = info.nodes[i];
+        for (let j = 0; j < (node.children || []).length; j++) {
+            const childId = node.children[j];
+            const child = info.nodes.find(n => n.id == childId);
+            if (child) {
+                const parentPos = calculatePosition(node);
+                const childPos = calculatePosition(child);
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 10 * view.zoom;
+                ctx.beginPath();
+                ctx.moveTo(parentPos.x + (100 * view.zoom), parentPos.y + (50 * view.zoom));
+                ctx.lineTo(childPos.x + (100 * view.zoom), childPos.y + (50 * view.zoom));
+                ctx.stroke();
+            }
+        }
+        for (let j = 0; j < (node.parents || []).length; j++) {
+            const parentId = node.parents[j];
+            const parent = info.nodes.find(n => n.id == parentId);
+            if (parent) {
+                const parentPos = calculatePosition(parent);
+                const childPos = calculatePosition(node);
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 10 * view.zoom;
+                ctx.beginPath();
+                ctx.moveTo(parentPos.x + (100 * view.zoom), parentPos.y + (50 * view.zoom));
+                ctx.lineTo(childPos.x + (100 * view.zoom), childPos.y + (50 * view.zoom));
+                ctx.stroke();
+            }
+        }
+    }
+    for (let i = 0; i < info.nodes.length; i++) {
         renderNode(info.nodes[i]);
     }
 
