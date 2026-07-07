@@ -3,8 +3,8 @@
         {
             "id": "1",
             "pos": {"x": 0, "y": 0},
-            "name": "General begginings (?)",
-            "desc": "Start generating points at a rate of <b>1P/s</b>",
+            "name": "Generic beginning",
+            "desc": "Start gaining \"Points\" <b>₽</b>\nat a rate of <b>1/s</b>",
             "baseplate": "main",
             "maxlevel": 3,
             "effect": "",
