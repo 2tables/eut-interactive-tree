@@ -261,6 +261,8 @@ function render() {
                 ctx.moveTo(parentPos.x + (100 * view.zoom), parentPos.y + (50 * view.zoom));
                 ctx.lineTo(childPos.x + (100 * view.zoom), childPos.y + (50 * view.zoom));
                 ctx.stroke();
+            } else {
+                console.error(`Child node with ID ${childId} not found for node ID ${node.id}.\nMake sure the child node exists in the nodes.json file and that the ID is correct.`);
             }
         }
         for (let j = 0; j < (node.parents || []).length; j++) {
@@ -275,6 +277,8 @@ function render() {
                 ctx.moveTo(parentPos.x + (100 * view.zoom), parentPos.y + (50 * view.zoom));
                 ctx.lineTo(childPos.x + (100 * view.zoom), childPos.y + (50 * view.zoom));
                 ctx.stroke();
+            } else {
+                console.error(`Parent node with ID ${parentId} not found for node ID ${node.id}.\nMake sure the parent node exists in the nodes.json file and that the ID is correct.`);
             }
         }
     }
